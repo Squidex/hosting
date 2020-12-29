@@ -5,46 +5,13 @@
 //  All rights reserved. Licensed under the MIT license.
 // ==========================================================================
 
-using System;
 using System.Globalization;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Squidex.Hosting.Configuration;
 
 namespace Microsoft.Extensions.Configuration
 {
     public static class ConfigurationExtensions
     {
-        public static IServiceCollection AddOptionValidation(this IServiceCollection services)
-        {
-            services.AddSingleton<ValidationInitializer>();
-
-            return services;
-        }
-
-        public static IServiceCollection Configure<T>(this IServiceCollection services, Action<IServiceProvider, T> configure) where T : class
-        {
-            services.AddSingleton<IConfigureOptions<T>>(c => new ConfigureOptions<T>(o => configure(c, o)));
-
-            return services;
-        }
-
-        public static IServiceCollection Configure<T>(this IServiceCollection services, IConfiguration config, string path) where T : class
-        {
-            services.AddOptions<T>().Bind(config.GetSection(path));
-
-            return services;
-        }
-
-        public static IServiceCollection ConfigureAndValidate<T>(this IServiceCollection services, IConfiguration config, string path) where T : class, IValidatableOptions
-        {
-            services.AddOptions<T>().Bind(config.GetSection(path));
-
-            services.AddSingleton<IErrorProvider>(c => ActivatorUtilities.CreateInstance<OptionsErrorProvider<T>>(c, path));
-
-            return services;
-        }
-
         public static T GetOptionalValue<T>(this IConfiguration config, string path, T defaultValue = default)
         {
             var value = config.GetValue(path, defaultValue!);

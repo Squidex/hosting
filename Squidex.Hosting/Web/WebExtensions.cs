@@ -5,11 +5,11 @@
 //  All rights reserved. Licensed under the MIT license.
 // ==========================================================================
 
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Squidex.Hosting.Web;
 
-namespace Squidex.Hosting.Web
+namespace Microsoft.AspNetCore.Builder
 {
     public static class WebExtensions
     {
