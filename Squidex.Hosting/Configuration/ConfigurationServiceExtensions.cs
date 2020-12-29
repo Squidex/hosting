@@ -8,6 +8,7 @@
 using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using Squidex.Hosting;
 using Squidex.Hosting.Configuration;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -16,7 +17,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddOptionValidation(this IServiceCollection services)
         {
-            services.AddSingleton<ValidationInitializer>();
+            services.AddSingleton<IInitializable, ValidationInitializer>();
 
             return services;
         }
