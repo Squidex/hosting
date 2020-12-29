@@ -24,7 +24,7 @@ namespace Microsoft.Extensions.Configuration
 
         public static IServiceCollection Configure<T>(this IServiceCollection services, Action<IServiceProvider, T> configure) where T : class
         {
-            services.AddTransient<IConfigureOptions<T>>(c => new DelegateConfigurator<T>(configure, c));
+            services.AddSingleton<IConfigureOptions<T>>(c => new ConfigureOptions<T>(o => configure(c, o)));
 
             return services;
         }
