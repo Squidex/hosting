@@ -1,0 +1,13 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Authors>sebastianstehle</Authors>
+    <Company>Squidex UG (haftungsbeschränkt)</Company>
+    <Description>Squidex Helpers Helpers</Description>
+    <Copyright>MIT</Copyright>
+    <PackageTags>Squidex HeadlessCMS Caching Helpers</PackageTags>
+    <PackageIcon>logo-squared.png</PackageIcon>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/Squidex/text/</PackageProjectUrl>
+    <Version>1.3.0</Version>
+  </PropertyGroup>
+</Project>
