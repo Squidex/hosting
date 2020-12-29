@@ -13,7 +13,7 @@ namespace Squidex.Hosting.Web
 {
     public static class WebExtensions
     {
-        public static void UseDefaultForwardingRules(this IApplicationBuilder app)
+        public static void UseDefaultForwardRules(this IApplicationBuilder app)
         {
             var urlsOptions = app.ApplicationServices.GetRequiredService<IOptions<UrlOptions>>().Value;
 

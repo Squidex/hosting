@@ -42,7 +42,7 @@ namespace Squidex.Hosting
 
         public void Configure(IApplicationBuilder app)
         {
-            app.UseDefaultForwardingRules();
+            app.UseDefaultForwardRules();
         }
     }
 }
