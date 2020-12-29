@@ -65,6 +65,20 @@ namespace Microsoft.Extensions.DependencyInjection
             }
         }
 
+        public static InterfaceRegistrator<T> AddScopedAs<T>(this IServiceCollection services, Func<IServiceProvider, T> factory) where T : class
+        {
+            services.AddTransient(typeof(T), factory);
+
+            return new InterfaceRegistrator<T>((t, f) => services.AddScoped(t, f), services.TryAddScoped);
+        }
+
+        public static InterfaceRegistrator<T> AddScopedAs<T>(this IServiceCollection services) where T : class
+        {
+            services.AddTransient<T, T>();
+
+            return new InterfaceRegistrator<T>((t, f) => services.AddScoped(t, f), services.TryAddScoped);
+        }
+
         public static InterfaceRegistrator<T> AddTransientAs<T>(this IServiceCollection services, Func<IServiceProvider, T> factory) where T : class
         {
             services.AddTransient(typeof(T), factory);
