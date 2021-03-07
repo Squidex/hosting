@@ -6,9 +6,9 @@
 // ==========================================================================
 
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Squidex.Hosting.Web;
 using Squidex.Log;
 
 namespace Squidex.Hosting
@@ -42,7 +42,18 @@ namespace Squidex.Hosting
 
         public void Configure(IApplicationBuilder app)
         {
+            app.UseDefaultPathBase();
             app.UseDefaultForwardRules();
+
+            app.UseRouting();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapGet("/hello", async context =>
+                {
+                    await context.Response.WriteAsync("Hello, World!");
+                });
+            });
         }
     }
 }

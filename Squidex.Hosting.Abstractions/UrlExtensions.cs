@@ -13,7 +13,15 @@ namespace Squidex.Hosting
     {
         public static string BuildFullUrl(this string baseUrl, string path, bool trailingSlash = false)
         {
-            var url = $"{baseUrl.TrimEnd('/')}/{path.Trim('/')}";
+            var url = baseUrl.TrimEnd('/');
+
+            path = path.Trim('/');
+
+            if (!string.IsNullOrWhiteSpace(path))
+            {
+                url += '/';
+                url += path.Trim('/');
+            }
 
             if (trailingSlash &&
                 url.IndexOf("#", StringComparison.OrdinalIgnoreCase) < 0 &&

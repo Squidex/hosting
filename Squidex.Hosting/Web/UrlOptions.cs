@@ -32,6 +32,8 @@ namespace Squidex.Hosting.Web
 
         public string BaseUrl { get; set; }
 
+        public string? BasePath { get; set; }
+
         public IEnumerable<ConfigurationError> Validate()
         {
             if (string.IsNullOrWhiteSpace(BaseUrl))

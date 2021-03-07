@@ -16,25 +16,27 @@ namespace Squidex.Hosting.Web
     public sealed class UrlGenerator : IUrlGenerator
     {
         private readonly HashSet<HostString> allTrustedHosts = new HashSet<HostString>();
-        private readonly UrlOptions options;
+        private readonly string baseUrl;
+        private readonly string basePath;
+        private readonly string? callbackUrl;
 
         public UrlGenerator(IOptions<UrlOptions> options)
         {
-            this.options = options.Value;
+            var option = options.Value;
 
-            if (TryBuildHost(options.Value.BaseUrl, out var host1))
+            if (TryBuildHost(option.BaseUrl, out var host1))
             {
                 allTrustedHosts.Add(host1);
             }
 
-            if (TryBuildHost(options.Value.CallbackUrl, out var host2))
+            if (TryBuildHost(option.CallbackUrl, out var host2))
             {
                 allTrustedHosts.Add(host2);
             }
 
-            if (options.Value.TrustedHosts != null)
+            if (option.TrustedHosts != null)
             {
-                foreach (var host in options.Value.TrustedHosts)
+                foreach (var host in option.TrustedHosts)
                 {
                     if (TryBuildHost(host, out var host3))
                     {
@@ -42,21 +44,29 @@ namespace Squidex.Hosting.Web
                     }
                 }
             }
+
+            basePath = GetBasePath(option.BasePath);
+            baseUrl = GetFullUrl(option.BaseUrl, basePath);
+
+            if (!string.IsNullOrWhiteSpace(option.CallbackUrl))
+            {
+                callbackUrl = GetFullUrl(option.CallbackUrl, basePath);
+            }
         }
 
         public string BuildCallbackUrl(string path, bool trailingSlash = true)
         {
-            if (string.IsNullOrWhiteSpace(options.CallbackUrl))
+            if (string.IsNullOrWhiteSpace(callbackUrl))
             {
                 return BuildUrl(path, trailingSlash);
             }
 
-            return options.BaseUrl.BuildFullUrl(path, trailingSlash);
+            return baseUrl.BuildFullUrl(path, trailingSlash);
         }
 
         public HostString BuildHost()
         {
-            if (!TryBuildHost(options.BaseUrl, out var host))
+            if (!TryBuildHost(baseUrl, out var host))
             {
                 var error = new ConfigurationError("urls:baseurl", "Value is required.");
 
@@ -66,14 +76,19 @@ namespace Squidex.Hosting.Web
             return host;
         }
 
+        public string BuildBasePath()
+        {
+            return basePath;
+        }
+
         public string BuildUrl()
         {
-            return options.BaseUrl;
+            return baseUrl;
         }
 
         public string BuildUrl(string path, bool trailingSlash = true)
         {
-            return options.BaseUrl.BuildFullUrl(path, trailingSlash);
+            return baseUrl.BuildFullUrl(path, trailingSlash);
         }
 
         public bool IsAllowedHost(string? url)
@@ -137,6 +152,25 @@ namespace Squidex.Hosting.Web
             {
                 return new HostString(host.ToLowerInvariant(), port);
             }
+        }
+
+        private static string GetBasePath(string? basePath)
+        {
+            var path = basePath?.Trim(' ', '/');
+
+            if (path == null)
+            {
+                return string.Empty;
+            }
+
+            return $"/{path}";
+        }
+
+        private static string GetFullUrl(string baseUrl, string basePath)
+        {
+            var url = baseUrl.TrimEnd(' ', '/');
+
+            return url.EndsWith(basePath, StringComparison.OrdinalIgnoreCase) ? url : $"{url}{basePath}";
         }
     }
 }

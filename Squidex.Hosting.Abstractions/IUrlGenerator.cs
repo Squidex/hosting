@@ -20,6 +20,8 @@ namespace Squidex.Hosting
 
         string BuildUrl(string path, bool trailingSlash = true);
 
+        string BuildBasePath();
+
         bool IsAllowedHost(string? url);
 
         bool IsAllowedHost(Uri uri);
